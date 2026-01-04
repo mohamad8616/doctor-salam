@@ -1,5 +1,5 @@
-import { Metadata } from "next";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -30,8 +30,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-
-
-
-
