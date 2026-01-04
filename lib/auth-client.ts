@@ -6,8 +6,14 @@ export const authClient = createAuthClient({
   plugins: [adminClient()],
 });
 
-export const signIn = async () => {
+export const signInGoogle = async () => {
   const data = await authClient.signIn.social({
     provider: "google",
+  });
+};
+
+export const signInGithub = async () => {
+  const data = await authClient.signIn.social({
+    provider: "github",
   });
 };

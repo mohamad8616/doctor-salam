@@ -9,11 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signInGithub } from "@/lib/auth-client";
+import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 import LoginSubmitFn from "./LoginSubmitFn";
 
 export function LoginForm() {
   const { register, handleSubmit, onSubmit, errors, isLoading } =
     LoginSubmitFn();
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
@@ -56,7 +59,24 @@ export function LoginForm() {
             {isLoading ? "در حال ورود..." : "ورود"}
           </Button>
         </form>
-
+        <div>
+          <div className="p-4">
+            <form action={signInGithub}>
+              <Button variant="outline" type="submit" className="w-full">
+                <IoLogoGithub />
+                <span className="sr-only">ورود به حساب کاربری با گیت‌هاب</span>
+              </Button>
+            </form>
+          </div>
+          <div className="p-4">
+            <form action={signInGithub}>
+              <Button variant="outline" type="submit" className="w-full">
+                <IoLogoGoogle />
+                <span className="sr-only">ورود به حساب کاربری با گوگل</span>
+              </Button>
+            </form>
+          </div>
+        </div>
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
