@@ -1,11 +1,12 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { Home, Info, Search } from "lucide-react";
+import { Home, Info, Search, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ModeToggle from "../theme/ThemeToggle";
-// import { useSession } from "@/lib/auth-client";
+import { Button } from "./button";
 
 const navItems = [
   {
@@ -27,7 +28,9 @@ const navItems = [
 
 const Navbar = () => {
   const pathname = usePathname();
-  // const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
+
+  console.log(session);
   const isDashboard =
     pathname?.startsWith("/dashboard") ||
     pathname?.startsWith("/admin") ||
@@ -71,7 +74,7 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-4">
           <ModeToggle />
-          {/* {session ? (
+          {session ? (
             <Link href="/dashboard">
               <Button variant="outline" size="sm">
                 <User className="h-4 w-4 mr-2" />
@@ -86,12 +89,10 @@ const Navbar = () => {
                 </Button>
               </Link>
               <Link href="/register">
-                <Button size="sm">
-                  ثبت نام
-                </Button>
+                <Button size="sm">ثبت نام</Button>
               </Link>
             </div>
-          )} */}
+          )}
         </div>
       </nav>
 
