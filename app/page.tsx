@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  
   const session = await getSession();
   console.log(session);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
