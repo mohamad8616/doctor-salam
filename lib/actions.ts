@@ -1,9 +1,9 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import z from "zod";
 import { auth } from "./auth";
 
+//Signup
 const SignupSchema = z.object({
   name: z
     .string("Name is required")
@@ -17,30 +17,33 @@ const SignupSchema = z.object({
 });
 
 export const signup = async (formData: FormData) => {
+  //VALIDATION
   const data = Object.fromEntries(formData);
-  const result = SignupSchema.safeParse(data);
-  if (!result.success) {
-    throw new Error(result.error.message);
+  const validateData = SignupSchema.safeParse(data);
+  if (!validateData.success) {
+    throw new Error(validateData.error.message);
   }
-  console.log(formData, result);
+  //END VALIDATION
   try {
+    //SIGNUP
     const res = await auth.api.signUpEmail({
       body: {
-        email: result.data.email,
-        password: result.data.password,
-        name: result.data.name,
+        email: validateData.data.email,
+        password: validateData.data.password,
+        name: validateData.data.name,
         callbackURL: process.env.BETTER_AUTH_URL,
       },
     });
-    console.log("action log:", res);
+    //END SIGNUP
+
     return { status: "success", response: res };
   } catch (error) {
     console.error("Signup failed:", error);
     return { status: "error", response: error };
   }
-  redirect("/login");
 };
 
+//Login
 const LoginSchema = z.object({
   email: z.email(),
   password: z
@@ -51,12 +54,19 @@ const LoginSchema = z.object({
 export const signIn = async (formData: FormData) => {
   //VALIDATION
   const data = Object.fromEntries(formData);
-  const result = LoginSchema.safeParse(data);
+  const validateData = LoginSchema.safeParse(data);
 
-  const res = await auth.api.signInEmail({
-    body: {
-      email: result.data?.email as string,
-      password: result.data?.password as string,
-    },
-  });
+  try {
+    const res = await auth.api.signInEmail({
+      body: {
+        email: validateData.data?.email as string,
+        password: validateData.data?.password as string,
+      },
+    });
+
+    return { status: "success", response: res };
+  } catch (error) {
+    console.error(error);
+    return { status: "error", response: error };
+  }
 };

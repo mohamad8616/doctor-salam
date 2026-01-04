@@ -10,51 +10,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn } from "@/lib/actions";
-import { loginSchema, type LoginInput } from "@/lib/validations";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import LoginSubmitFn from "./LoginSubmitFn";
 
 export function LoginForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const onSubmit = async (data: LoginInput) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const formdata = new FormData();
-      formdata.append("email", data.email);
-      formdata.append("password", data.password);
-      const result = await signIn(formdata);
-
-      // if () {
-      //   setError("خطا در ورود");
-      //   return;
-      // }
-
-      // Redirect based on user role
-      router.push("/dashboard");
-      router.refresh();
-    } catch (err) {
-      setError("خطایی رخ داد. لطفا دوباره تلاش کنید.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  const { register, handleSubmit, onSubmit, errors, isLoading } =
+    LoginSubmitFn();
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
@@ -63,9 +23,10 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {error && (
+          {/* Error Message */}
+          {errors.root?.message && (
             <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
-              {error}
+              {errors.root?.message}
             </div>
           )}
 
