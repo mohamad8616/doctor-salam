@@ -1,4 +1,3 @@
-"use client";
 
 import { signIn } from "@/lib/actions";
 import { loginSchema, type LoginInput } from "@/lib/validations";
