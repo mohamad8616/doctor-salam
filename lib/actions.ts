@@ -1,5 +1,6 @@
 "use server";
 
+import { getSession } from "@/hooks/getSession";
 import z from "zod";
 import { auth } from "./auth";
 
@@ -70,3 +71,5 @@ export const signIn = async (formData: FormData) => {
     return { status: "error", response: error };
   }
 };
+
+
