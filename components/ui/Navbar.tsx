@@ -28,14 +28,18 @@ const navItems = [
 
 const Navbar = () => {
   const pathname = usePathname();
+
   const { data: session } = authClient.useSession();
 
   console.log(session);
+
   const isDashboard =
     pathname?.startsWith("/dashboard") ||
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/doctor") ||
     pathname?.startsWith("/patient");
+
+  const role = session?.user?.role;
 
   // Don't show navbar in dashboard pages
   if (isDashboard) {
@@ -75,7 +79,7 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           <ModeToggle />
           {session ? (
-            <Link href="/dashboard">
+            <Link href={`${role}/dashboard`}>
               <Button variant="outline" size="sm">
                 <User className="h-4 w-4 mr-2" />
                 پنل کاربری
@@ -116,15 +120,15 @@ const Navbar = () => {
               </Link>
             );
           })}
-          {/* {session ? (
+          {session ? (
             <Link
               href="/dashboard"
               className={cn(
                 "flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
-                pathname?.startsWith("/dashboard") || 
-                pathname?.startsWith("/admin") || 
-                pathname?.startsWith("/doctor") || 
-                pathname?.startsWith("/patient")
+                pathname?.startsWith("/dashboard") ||
+                  pathname?.startsWith("/admin") ||
+                  pathname?.startsWith("/doctor") ||
+                  pathname?.startsWith("/patient")
                   ? "text-primary"
                   : "text-muted-foreground"
               )}
@@ -140,7 +144,7 @@ const Navbar = () => {
               <User className="h-5 w-5" />
               <span>ورود</span>
             </Link>
-          )} */}
+          )}
         </div>
       </nav>
 
