@@ -1,9 +1,9 @@
+import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
+import Navbar from "../components/navbar/Navbar";
 import { ThemeProvider } from "../components/theme/ThemeProvider";
-import Navbar from "../components/ui/Navbar";
 import "./globals.css";
-import Footer from "@/components/footer/Footer";
 
 const vazirmatn = Vazirmatn({
   subsets: ["latin", "arabic"],

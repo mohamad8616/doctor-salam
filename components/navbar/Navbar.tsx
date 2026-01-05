@@ -2,13 +2,13 @@
 
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import Logo from "@/public/logo.png";
 import { Home, Info, Search, User } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ModeToggle from "../theme/ThemeToggle";
-import { Button } from "./button";
+import { Button } from "../ui/button";
+import Logo from "./Logo";
+import SmallScreenToolbar from "./SmallScreenToolbar";
 
 const navItems = [
   {
@@ -53,9 +53,7 @@ const Navbar = () => {
       {/* Desktop Navbar */}
       <nav className="hidden md:flex items-center justify-between px-6 py-1 border-b bg-background sticky top-0 right-0 z-50">
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-xl font-bold ">
-            <Image src={Logo} width={100} height={100} alt="سیستم نوبت دهی آنلاین" />
-          </Link>
+          <Logo />
           <div className="flex items-center gap-4">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -103,6 +101,8 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Bottom Navbar */}
+      <SmallScreenToolbar />
+
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t bg-background">
         <div className="grid grid-cols-4 h-16">
           {navItems.map((item) => {
