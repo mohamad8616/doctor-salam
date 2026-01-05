@@ -1,5 +1,5 @@
+import Logo from "../Logo";
 import ModeToggle from "../theme/ThemeToggle";
-import Logo from "./Logo";
 
 const SmallScreenToolbar = () => {
   return (
