@@ -2,7 +2,9 @@
 
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import Logo from "@/public/logo.png";
 import { Home, Info, Search, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ModeToggle from "../theme/ThemeToggle";
@@ -49,10 +51,10 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop Navbar */}
-      <nav className="hidden md:flex items-center justify-between px-6 py-4 border-b bg-background ">
+      <nav className="hidden md:flex items-center justify-between px-6 py-1 border-b bg-background sticky top-0 right-0 z-50">
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-xl font-bold">
-            سیستم نوبت دهی آنلاین
+          <Link href="/" className="text-xl font-bold ">
+            <Image src={Logo} width={100} height={100} alt="سیستم نوبت دهی آنلاین" />
           </Link>
           <div className="flex items-center gap-4">
             {navItems.map((item) => {
