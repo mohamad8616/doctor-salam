@@ -2,6 +2,7 @@
   "name": "doctor-salam",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,7 +18,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-pg": "6.17.1",
-    "@prisma/client": "6.17.1",
+    "@prisma/client": "7.2.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -34,7 +35,7 @@
     "lucide-react": "^0.562.0",
     "next-themes": "^0.4.6",
     "pg": "^8.16.3",
-    "prisma": "6.17.1",
+    "prisma": "7.2.0",
     "react": "19.2.3",
     "react-day-picker": "^9.13.0",
     "react-dom": "19.2.3",

@@ -1,6 +1,5 @@
 "use server";
 
-import { getSession } from "@/hooks/getSession";
 import z from "zod";
 import { auth } from "./auth";
 
