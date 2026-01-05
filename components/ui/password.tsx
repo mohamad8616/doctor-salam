@@ -17,7 +17,7 @@ export function Password(props: React.ComponentProps<typeof InputGroupInput>) {
   return (
     <InputGroup>
       <InputGroupInput
-        placeholder="password"
+        placeholder="رمز عبور"
         type={isVisible ? "text" : "password"}
         {...props}
       />
