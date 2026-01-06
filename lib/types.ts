@@ -24,3 +24,9 @@ export type Session = {
     impersonatedBy?: string | null | undefined;
   };
 } | null;
+
+export const ROLES = {
+  PATIENT: "PATIENT",
+  DOCTOR: "DOCTOR",
+  ADMIN: "ADMIN",
+} as const;

@@ -11,7 +11,16 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [nextCookies(), admin()],
+  plugins: [
+    nextCookies(),
+    admin({
+      defaultRole: "PATIENT",
+      adminRoles: ["ADMIN"],
+      userRoles: ["PATIENT", "DOCTOR"],
+      bannedUserMessage: "حساب شما مسدود شده است",
+      activeUserMessage: "حساب شما دوباره باز شد",
+    }),
+  ],
 
   socialProviders: {
     google: {

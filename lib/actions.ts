@@ -9,7 +9,7 @@ const SignupSchema = z.object({
     .string("Name is required")
     .min(2, "Name must be at least 2 characters long")
     .max(50, "Name must be at most 50 characters long"),
-  email: z.email("Email is not valid"),
+  email: z.email("Email is not valid").toLowerCase(),
   password: z
     .string("Password is required")
     .min(6, "The password must be at least 6 characters long")
@@ -32,9 +32,9 @@ export const signup = async (formData: FormData) => {
         password: validateData.data.password,
         name: validateData.data.name,
         callbackURL: process.env.BETTER_AUTH_URL,
+        rememberMe: true,
       },
     });
-    //END SIGNUP
 
     return { status: "success", response: res };
   } catch (error) {
@@ -70,5 +70,3 @@ export const signIn = async (formData: FormData) => {
     return { status: "error", response: error };
   }
 };
-
-
