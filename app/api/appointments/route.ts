@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 import { appointmentSchema } from "@/lib/validations";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -52,7 +52,10 @@ export async function GET(request: NextRequest) {
       });
 
       if (!doctor) {
-        return NextResponse.json({ error: "Doctor not found" }, { status: 404 });
+        return NextResponse.json(
+          { error: "Doctor not found" },
+          { status: 404 }
+        );
       }
 
       appointments = await db.appointment.findMany({
@@ -80,7 +83,10 @@ export async function GET(request: NextRequest) {
       });
 
       if (!patient) {
-        return NextResponse.json({ error: "Patient not found" }, { status: 404 });
+        return NextResponse.json(
+          { error: "Patient not found" },
+          { status: 404 }
+        );
       }
 
       appointments = await db.appointment.findMany({
@@ -185,8 +191,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-
-
-
-

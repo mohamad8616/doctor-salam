@@ -22,6 +22,10 @@ model User {
   banReason  String?
   banExpires DateTime?
 
+  doctorProfile DoctorProfile?
+  appointments  Appointment[]
+  prescriptions Prescription[]
+
   @@unique([email])
   @@map("user")
 }
@@ -82,4 +86,78 @@ enum Role {
   PATIENT
   ADMIN
   DOCTOR
+}
+
+model DoctorProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  specialty   String
+  bio         String?
+  licenseId   String?
+  verified    Boolean  @default(false)
+
+  appointments Appointment[]
+  prescriptions Prescription[]
+  blogs        Blog[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+
+  patientId   String
+  patient     User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  doctorId    String
+  doctor      DoctorProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  scheduledAt DateTime
+  status      AppointmentStatus @default(PENDING)
+  reason      String?
+
+  prescriptions Prescription[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Prescription {
+  id            String   @id @default(cuid())
+
+  doctorId      String
+  doctor        DoctorProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  patientId     String
+  patient       User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  appointmentId String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+
+  notes         String
+  issuedAt      DateTime @default(now())
+}
+
+model Blog {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+
+  doctorId  String
+  doctor    DoctorProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  published Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

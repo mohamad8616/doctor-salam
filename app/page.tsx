@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getSession } from "@/hooks/getSession";
+import { getSession } from "@/lib/utils";
 
 import { Calendar, Clock, Shield, Stethoscope } from "lucide-react";
 import { Metadata } from "next";
