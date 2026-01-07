@@ -5,8 +5,6 @@ import { prisma } from "@/prisma/prisma";
 import { auth } from "./auth";
 import { adminCreateUserSchema } from "./validations";
 
-
-
 //ADMIN ROLE - CREATE USER
 export const adminCreateUser = async (formData: FormData) => {
   //VALIDATION
@@ -20,7 +18,7 @@ export const adminCreateUser = async (formData: FormData) => {
   if (!session) {
     throw new Error("Unauthorized");
   }
-  if (session.user?.role !== "admin") {
+  if (session.role !== "admin") {
     throw new Error("Unauthorized");
   }
   try {
@@ -29,7 +27,7 @@ export const adminCreateUser = async (formData: FormData) => {
         email: "user@example.com", // required
         password: "some-secure-password", // required
         name: "James Smith", // required
-        role: "admin",
+        role: 'user',
         data: { customField: "customValue" },
       },
     });
