@@ -1,114 +1,100 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { appointmentSchema } from "@/lib/validations";
 import { NextRequest, NextResponse } from "next/server";
+import { appointmentSchema } from "@/lib/validations";
 
+/**
+ * GET /api/appointments
+ *
+ * Role-based appointment fetching:
+ * - ADMIN   → all appointments
+ * - DOCTOR  → only appointments assigned to that doctor
+ * - PATIENT → only their own appointments
+ */
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
+    // 1️⃣ Authenticate user
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const role = (session.user as any)?.role;
-
+    const role = session.user.role;
     let appointments;
 
+    /**
+     * 2️⃣ ADMIN: can see all appointments
+     */
     if (role === "ADMIN") {
       appointments = await db.appointment.findMany({
         include: {
+          // Load doctor + doctor’s user info
           doctor: {
             include: {
               user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
+                select: { id: true, name: true, email: true },
               },
             },
           },
+          // Patient is already a User
           patient: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
+            select: { id: true, name: true, email: true },
           },
         },
-        orderBy: {
-          date: "desc",
-        },
+        orderBy: { scheduledAt: "desc" },
       });
     } else if (role === "DOCTOR") {
-      const doctor = await db.doctor.findUnique({
+
+    /**
+     * 3️⃣ DOCTOR: only their assigned appointments
+     */
+      // Find doctor profile linked to this user
+      const doctorProfile = await db.doctorProfile.findUnique({
         where: { userId: session.user.id },
       });
 
-      if (!doctor) {
+      if (!doctorProfile) {
         return NextResponse.json(
-          { error: "Doctor not found" },
+          { error: "Doctor profile not found" },
           { status: 404 }
         );
       }
 
       appointments = await db.appointment.findMany({
-        where: { doctorId: doctor.id },
+        where: { doctorId: doctorProfile.id },
         include: {
           patient: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
+            select: { id: true, name: true, email: true },
           },
         },
-        orderBy: {
-          date: "desc",
-        },
+        orderBy: { scheduledAt: "desc" },
       });
     } else if (role === "PATIENT") {
-      const patient = await db.patient.findUnique({
-        where: { userId: session.user.id },
-      });
 
-      if (!patient) {
-        return NextResponse.json(
-          { error: "Patient not found" },
-          { status: 404 }
-        );
-      }
-
+    /**
+     * 4️⃣ PATIENT: only their own appointments
+     */
       appointments = await db.appointment.findMany({
-        where: { patientId: patient.id },
+        where: { patientId: session.user.id },
         include: {
           doctor: {
             include: {
               user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
+                select: { id: true, name: true, email: true },
               },
             },
           },
         },
-        orderBy: {
-          date: "desc",
-        },
+        orderBy: { scheduledAt: "desc" },
       });
     } else {
+
+    /**
+     * 5️⃣ Invalid role (should never happen)
+     */
       return NextResponse.json({ error: "Invalid role" }, { status: 403 });
     }
 
@@ -122,31 +108,35 @@ export async function GET(request: NextRequest) {
   }
 }
 
+
+/**
+ * POST /api/appointments
+ *
+ * - Only PATIENTs can create appointments
+ * - Appointment is always created as PENDING
+ */
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
+    // 1️⃣ Authenticate user
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
 
-    if (!session) {
+    // Only patients can create appointments
+    if (!session || session.user.role !== "PATIENT") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // 2️⃣ Validate request body
     const body = await request.json();
     const validatedData = appointmentSchema.parse(body);
 
-    const patient = await db.patient.findUnique({
-      where: { userId: session.user.id },
-    });
-
-    if (!patient) {
-      return NextResponse.json({ error: "Patient not found" }, { status: 404 });
-    }
-
+    // 3️⃣ Create appointment
     const appointment = await db.appointment.create({
       data: {
-        doctorId: validatedData.doctorId,
-        patientId: patient.id,
-        date: validatedData.date,
-        timeSlot: validatedData.timeSlot,
+        patientId: session.user.id,          // patient is the logged-in user
+        doctorId: validatedData.doctorId,    // doctor profile ID
+        scheduledAt: validatedData.scheduledAt,
         reason: validatedData.reason,
         status: "PENDING",
       },
@@ -154,24 +144,12 @@ export async function POST(request: NextRequest) {
         doctor: {
           include: {
             user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
+              select: { id: true, name: true, email: true },
             },
           },
         },
         patient: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
+          select: { id: true, name: true, email: true },
         },
       },
     });
@@ -179,12 +157,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(appointment, { status: 201 });
   } catch (error) {
     console.error("Error creating appointment:", error);
+
+    // Zod validation errors
     if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(
         { error: "Validation error", details: error },
         { status: 400 }
       );
     }
+
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

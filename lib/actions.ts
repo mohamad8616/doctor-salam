@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import z from "zod";
 import { auth } from "./auth";
 
@@ -12,8 +13,8 @@ const SignupSchema = z.object({
   email: z.email("Email is not valid").toLowerCase(),
   password: z
     .string("Password is required")
-    .min(6, "The password must be at least 6 characters long")
-    .max(50, "The password must be at most 50 characters long"),
+    .min(6, "رمز عبور بید")
+    .max(50, "رمز عبور بید"),
 });
 
 export const signup = async (formData: FormData) => {
@@ -69,4 +70,14 @@ export const signIn = async (formData: FormData) => {
     console.error(error);
     return { status: "error", response: error };
   }
+};
+
+export const getSession = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    return null;
+  }
+  return session;
 };

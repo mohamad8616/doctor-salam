@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 export type Session = {
   user: {
     id: string;
@@ -30,3 +32,7 @@ export const ROLES = {
   DOCTOR: "DOCTOR",
   ADMIN: "ADMIN",
 } as const;
+
+export type UserWithDoctorProfile = Prisma.UserGetPayload<{
+  include: { doctorProfile: true };
+}>;

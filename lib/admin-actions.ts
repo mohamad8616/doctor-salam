@@ -1,21 +1,12 @@
 "use server";
 
-import { getSession } from "@/hooks/getSession";
-import z from "zod";
+import { getSession } from "@/lib/actions";
+import { prisma } from "@/prisma/prisma";
 import { auth } from "./auth";
+import { adminCreateUserSchema } from "./validations";
 
-const adminCreateUserSchema = z.object({
-  name: z
-    .string("Name is required")
-    .min(2, "Name must be at least 2 characters long")
-    .max(50, "Name must be at most 50 characters long"),
-  email: z.email("Email is not valid"),
-  password: z
-    .string("Password is required")
-    .min(6, "The password must be at least 6 characters long")
-    .max(50, "The password must be at most 50 characters long"),
-  role: z.enum(["PATIENT", "DOCTOR"]).optional(),
-});
+
+
 //ADMIN ROLE - CREATE USER
 export const adminCreateUser = async (formData: FormData) => {
   //VALIDATION
@@ -46,4 +37,23 @@ export const adminCreateUser = async (formData: FormData) => {
     console.error(error);
     return { status: "error", response: error };
   }
+};
+
+export const promoteToDoctor = async (userId: string) => {
+  await prisma.$transaction(async (tx) => {
+    // 1. Update role
+    const user = await tx.user.update({
+      where: { id: userId },
+      data: { role: "DOCTOR" },
+    });
+
+    // 2. Create doctor profile
+    await tx.doctorProfile.create({
+      data: {
+        userId: user.id,
+        specialty: "General Medicine",
+        verified: true, // or false, depending on your flow
+      },
+    });
+  });
 };

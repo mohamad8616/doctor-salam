@@ -1,22 +1,12 @@
-import { Role, User } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
-import { headers } from "next/headers";
 import { twMerge } from "tailwind-merge";
-import { auth } from "./auth";
+import { getSession } from "./actions";
+import { UserWithDoctorProfile } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export const getSession = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session) {
-    return null;
-  }
-  return session;
-};
 
 export function requireRole(role: Role) {
   return async () => {
@@ -28,6 +18,7 @@ export function requireRole(role: Role) {
   };
 }
 
-export const isDoctor = async (user: User) => {
+export const isDoctor = async (user: UserWithDoctorProfile) => {
   const isDoctor = user.role === "DOCTOR" && user.doctorProfile !== null;
+  return isDoctor;
 };
