@@ -1,37 +1,24 @@
-"use client";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/dashboard/Sidebar";
-import { authClient } from "@/lib/auth-client";
-// import { useRouter } from "next/router";
+import { getSession } from "@/lib/actions";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   // const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
+  const session = await getSession();
+  if (!session?.session) redirect("/login");
 
-  if (!session) return null;
-
-  if (isPending) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">در حال بارگذاری...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const userRole = (session.user.role as string) || "patient";
+  const userRole = session.role!;
 
   return (
     <div className="flex h-screen flex-col">
       <DashboardHeader />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar role={userRole as "ADMIN" | "DOCTOR" | "PATIENT"} />
+        <Sidebar role={userRole} />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>

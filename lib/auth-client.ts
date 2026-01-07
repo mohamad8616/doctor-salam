@@ -9,11 +9,13 @@ export const authClient = createAuthClient({
 export const signInGoogle = async () => {
   const data = await authClient.signIn.social({
     provider: "google",
+    callbackURL: process.env.BETTER_AUTH_URL,
   });
 };
 
 export const signInGithub = async () => {
   const data = await authClient.signIn.social({
     provider: "github",
+    callbackURL: process.env.BETTER_AUTH_URL,
   });
 };

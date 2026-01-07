@@ -36,3 +36,4 @@ export const ROLES = {
 export type UserWithDoctorProfile = Prisma.UserGetPayload<{
   include: { doctorProfile: true };
 }>;
+

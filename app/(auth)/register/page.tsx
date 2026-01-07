@@ -1,9 +1,8 @@
-
-import { RegisterForm } from "@/components/auth/RegisterForm";
-import { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
+import { RegisterForm } from "@/components/auth/register/RegisterForm";
 import karola from "@/public/karola.webp";
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "ثبت نام",

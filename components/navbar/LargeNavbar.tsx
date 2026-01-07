@@ -15,6 +15,7 @@ const LargeNavbar = ({ session }: { session: Session }) => {
     <nav className="hidden md:flex items-center justify-between px-6 py-1 border-b bg-background sticky top-0 right-0 z-50">
       <div className="flex items-center gap-6">
         <Logo />
+
         <div className="flex items-center gap-4">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -39,8 +40,9 @@ const LargeNavbar = ({ session }: { session: Session }) => {
       </div>
       <div className="flex items-center gap-4">
         <ModeToggle />
+
         {session ? (
-          <Link href={`${role}/dashboard`}>
+          <Link href={`${role?.toLowerCase()}/dashboard`}>
             <Button variant="outline" size="sm">
               <User className="h-4 w-4 mr-2" />
               پنل کاربری

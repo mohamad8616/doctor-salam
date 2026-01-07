@@ -12,7 +12,7 @@ const RegisterSubmitFn = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, isSubmitting },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
   });
@@ -49,7 +49,7 @@ const RegisterSubmitFn = () => {
     }
   };
 
-  return { register, handleSubmit, onSubmit, errors, isLoading };
+  return { register, handleSubmit, onSubmit, errors, isLoading, isSubmitting };
 };
 
 export default RegisterSubmitFn;

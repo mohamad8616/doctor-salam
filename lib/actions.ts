@@ -65,7 +65,7 @@ export const signIn = async (formData: FormData) => {
       },
     });
 
-    return { status: "success", response: res };
+    return { status: "success", response: res, role: res.user.role };
   } catch (error) {
     console.error(error);
     return { status: "error", response: error };
@@ -79,5 +79,5 @@ export const getSession = async () => {
   if (!session) {
     return null;
   }
-  return session;
+  return { session, role: session.user.role };
 };

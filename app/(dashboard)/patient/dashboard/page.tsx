@@ -1,5 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Calendar, Clock, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -15,9 +21,7 @@ export default function PatientDashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">داشبورد بیمار</h1>
-          <p className="text-muted-foreground">
-            خوش آمدید به پنل بیمار
-          </p>
+          <p className="text-muted-foreground">به پنل کاربری خوش آمدید</p>
         </div>
         <Link href="/patient/book">
           <Button>
@@ -36,10 +40,10 @@ export default function PatientDashboardPage() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.upcomingAppointments}</div>
-            <p className="text-xs text-muted-foreground">
-              نوبت‌های آینده شما
-            </p>
+            <div className="text-2xl font-bold">
+              {stats.upcomingAppointments}
+            </div>
+            <p className="text-xs text-muted-foreground">نوبت‌های آینده شما</p>
           </CardContent>
         </Card>
 
@@ -52,9 +56,7 @@ export default function PatientDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.pastAppointments}</div>
-            <p className="text-xs text-muted-foreground">
-              تاریخچه نوبت‌ها
-            </p>
+            <p className="text-xs text-muted-foreground">تاریخچه نوبت‌ها</p>
           </CardContent>
         </Card>
       </div>
@@ -62,21 +64,12 @@ export default function PatientDashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>نوبت‌های پیش رو</CardTitle>
-          <CardDescription>
-            نوبت‌های آینده شما
-          </CardDescription>
+          <CardDescription>نوبت‌های آینده شما</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            در حال بارگذاری...
-          </p>
+          <p className="text-sm text-muted-foreground">در حال بارگذاری...</p>
         </CardContent>
       </Card>
     </div>
   );
 }
-
-
-
-
-

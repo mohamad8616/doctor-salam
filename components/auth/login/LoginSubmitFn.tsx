@@ -1,4 +1,3 @@
-
 import { signIn } from "@/lib/actions";
 import { loginSchema, type LoginInput } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +11,7 @@ const LoginSubmitFn = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, isSubmitting },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
@@ -29,15 +28,17 @@ const LoginSubmitFn = () => {
         return;
       }
 
+      const role = result?.role?.toLowerCase();
+
       // Redirect based on user role
-      router.push("/dashboard");
+      router.push(`${role}/dashboard`);
       router.refresh();
     } catch (err) {
-        console.error(err);
+      console.error(err);
       setError("root", { message: "خطایی رخ داد. لطفا دوباره تلاش کنید." });
     }
   };
-  return { register, handleSubmit, onSubmit, errors, isLoading };
+  return { register, handleSubmit, onSubmit, errors, isLoading , isSubmitting};
 };
 
 export default LoginSubmitFn;

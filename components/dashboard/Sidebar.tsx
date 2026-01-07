@@ -3,88 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import {
-  Calendar,
-  ClipboardList,
-  FileText,
-  LayoutDashboard,
-  LogOut,
-  Stethoscope,
-  User,
-  Users,
-} from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import {
+  adminMenuItems,
+  doctorMenuItems,
+  patientMenuItems,
+} from "./Dashboard.userItems";
 
-interface SidebarProps {
-  role: "ADMIN" | "DOCTOR" | "PATIENT";
-}
 
-const adminMenuItems = [
-  {
-    title: "داشبورد",
-    href: "/admin/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "پزشکان",
-    href: "/admin/doctors",
-    icon: Stethoscope,
-  },
-  {
-    title: "بیماران",
-    href: "/admin/patients",
-    icon: Users,
-  },
-  {
-    title: "نوبت‌ها",
-    href: "/admin/appointments",
-    icon: Calendar,
-  },
-];
 
-const doctorMenuItems = [
-  {
-    title: "داشبورد",
-    href: "/doctor/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "نوبت‌ها",
-    href: "/doctor/appointments",
-    icon: Calendar,
-  },
-  {
-    title: "نسخه‌ها",
-    href: "/doctor/prescriptions",
-    icon: FileText,
-  },
-  {
-    title: "پروفایل",
-    href: "/doctor/profile",
-    icon: User,
-  },
-];
 
-const patientMenuItems = [
-  {
-    title: "داشبورد",
-    href: "/patient/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "نوبت‌های من",
-    href: "/patient/appointments",
-    icon: Calendar,
-  },
-  {
-    title: "رزرو نوبت",
-    href: "/patient/book",
-    icon: ClipboardList,
-  },
-];
-
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role }: {role:string}) {
   const pathname = usePathname();
   const router = useRouter();
 
